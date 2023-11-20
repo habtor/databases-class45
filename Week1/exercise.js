@@ -5,7 +5,6 @@ const connection = mysql.createConnection({
   host: "localhost",
   user: "hyfuser",
   password: "hyfpassword",
-  //   database: "meetup",
 });
 
 //============ Connection statment ============
@@ -14,53 +13,48 @@ connection.connect((err) => {
   console.log("Database connected...");
 });
 
-//============ Delete database if exist ============
-const deleteDatabase = "drop database if exists meetup";
-connection.query(deleteDatabase, (err) => {
-  if (err) throw err;
-  console.log("Database deleted...");
+//============ Delete, create and select database if exist ============
+const deleteDatabase = "DROP DATABASE IF EXISTS meetup";
+const createDatabase = "CREATE DATABASE IF NOT EXISTS meetup";
+const useDatabase = "USE meetup";
+//=========== Create tables ============
+const createInviteeTable = `CREATE TABLE IF NOT EXISTS Invitee 
+    (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    invitee_no INT,
+    invitee_name VARCHAR(255),
+    invited_by VARCHAR(255)
+  )`;
+const createRoomTable = `CREATE TABLE IF NOT EXISTS Room 
+   (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    room_no INT,
+    room_name VARCHAR(255),
+    floor_number INT
+  )`;
+const createMeetingTable = `CREATE TABLE IF NOT EXISTS Meeting (
+    id INT AUTO_INCREMENT PRIMARY KEY NOT NULL, 
+    meeting_no INT,
+    meeting_title VARCHAR(255),
+    starting_time TIME,
+    ending_time TIME,
+    room_no INT
+  )`;
+//============ Insert to tables =========
+
+const queries = [
+  deleteDatabase,
+  createDatabase,
+  useDatabase,
+  createInviteeTable,
+  createRoomTable,
+  createMeetingTable,
+];
+queries.forEach((query) => {
+  connection.query(query, (err) => {
+    if (err) throw err;
+    console.log("Query executed successfully...");
+  });
 });
 
-//============ Create the datbase ============
-const createDatabase = "create database if not exists meetup;";
-connection.query(createDatabase, (err) => {
-  if (err) throw err;
-  console.log("Database created...");
-});
-
-//============ Select the datbase ============
-const useDatabase = "use meetup";
-connection.query(useDatabase, (err) => {
-  if (err) throw err;
-  console.log("Database selected...");
-});
-
-//============ Create tables ==============================
-//============ Create invitee table
-const createInviteeTable =
-  "CREATE TABLE IF NOT EXISTS Invitee(invitee_no INT,invitee_name VARCHAR(255),invited_by VARCHAR(255))";
-connection.query(createInviteeTable, (err) => {
-  if (err) throw err;
-  console.log("Invitee table created...");
-});
-
-//============ Create room table
-const createRoomTable =
-  "CREATE TABLE IF NOT EXISTS Room(room_no INT, room_name VARCHAR(255), floor_number INT)";
-connection.query(createRoomTable, (err) => {
-  if (err) throw err;
-  console.log("Room table created...");
-});
-
-//============ Create meeting table
-const createMeetingTable =
-  "CREATE TABLE IF NOT EXISTS Meeting(meeting_no INT, meeting_title VARCHAR(255), starting_time TIME, ending_time TIME, room_no INT)";
-connection.query(createMeetingTable, (err) => {
-  if (err) throw err;
-  console.log("Meeting table created...");
-});
-
-//============ Insert to tables ==========================
 //============ Insert to invitee
 const insertDataToInvitee = (values) => {
   const inviteeInsertQuery =
