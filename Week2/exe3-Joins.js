@@ -19,13 +19,16 @@ connection.query("USE books", (err) => {
 });
 
 // 1. Write a query that prints names of all authors and their corresponding mentors.
-const firstQ = `SELECT authors.author_name Author, mentors.author_name as Mentor
+const firstQ = `SELECT authors.author_name AS Author, mentors.author_name AS Mentor
 FROM authors
 LEFT JOIN authors mentors ON authors.mentor = mentors.author_id;`;
 
-// 2. Write a query that prints all columns of authors and their published paper_title. 
+// 2. Write a query that prints all columns of authors and their published paper_title.
 // If there is an author without any research_Papers, print the information of that author too.
-const secondQ = ``;
+const secondQ = `SELECT authors.*, research_Papers.paper_title 
+FROM authors
+LEFT JOIN author_paper ON authors.author_id = author_paper.author_id
+LEFT JOIN research_Papers ON research_Papers.paper_id = author_paper.paper_id`;
 
 const queries = [firstQ, secondQ];
 

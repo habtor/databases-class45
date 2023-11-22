@@ -82,7 +82,9 @@ const insertToPapers = `INSERT INTO research_Papers
     ('Future of Transportation', 'Transportation Expo 2022', '2022-06-09'),
     ('Advances in 3D Printing', '3D Printing Symposium 2021', '2021-12-05'),
     ('Medical Imaging Technologies', 'Medical Imaging Conference 2022', '2022-03-01'),
-    ('Future of Robotics', 'Robotics Expo 2022', '2022-11-12')`;
+    ('Future', 'Expo 2022', '2022-11-10'),
+    ('Robotics', 'Robotics Expo 2021', '2021-11-12'),
+    ('Imaging Technologies', 'Imaging Expo 2021', '2021-10-12')`;
 
 const insertToJunctionTable = `INSERT INTO author_paper 
 (author_id,paper_id)
