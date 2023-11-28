@@ -8,38 +8,108 @@ async function createEpisodeExercise(client) {
    *
    * episode: S09E13
    * title: MOUNTAIN HIDE-AWAY
-   * elements: ["CIRRUS", "CLOUDS", "CONIFER", "DECIDIOUS", "GRASS", "MOUNTAIN", "MOUNTAINS", "RIVER", "SNOWY_MOUNTAIN", "TREE", "TREES"]
+   * elements: ["CIRRUS", "CLOUDS", "CONIFER", "DECIDUOUS", "GRASS", "MOUNTAIN", "MOUNTAINS", "RIVER", "SNOWY_MOUNTAIN", "TREE", "TREES"]
    */
+  const addedEpisode = {
+    EPISODE: "S09E13",
+    TITLE: "MOUNTAIN HIDE-AWAY",
+    APPLE_FRAME: 0,
+    AURORA_BOREALIS: 0,
+    BARN: 0,
+    BEACH: 0,
+    BOAT: 0,
+    BRIDGE: 0,
+    BUILDING: 0,
+    BUSHES: 0,
+    CABIN: 0,
+    CACTUS: 0,
+    CIRCLE_FRAME: 0,
+    CIRRUS: 1,
+    CLIFF: 0,
+    CLOUDS: 1,
+    CONIFER: 1,
+    CUMULUS: 0,
+    DECIDUOUS: 1,
+    DIANE_ANDRE: 0,
+    DOCK: 0,
+    DOUBLE_OVAL_FRAME: 0,
+    FARM: 0,
+    FENCE: 0,
+    FIRE: 0,
+    FLORIDA_FRAME: 0,
+    FLOWERS: 0,
+    FOG: 0,
+    FRAMED: 0,
+    GRASS: 1,
+    GUEST: 0,
+    HALF_CIRCLE_FRAME: 0,
+    HALF_OVAL_FRAME: 0,
+    HILLS: 0,
+    LAKE: 0,
+    LAKES: 0,
+    LIGHTHOUSE: 0,
+    MILL: 0,
+    MOON: 0,
+    MOUNTAIN: 1,
+    MOUNTAINS: 1,
+    NIGHT: 0,
+    OCEAN: 0,
+    OVAL_FRAME: 0,
+    PALM_TREES: 0,
+    PATH: 0,
+    PERSON: 0,
+    PORTRAIT: 0,
+    RECTANGLE_3D_FRAME: 0,
+    RECTANGULAR_FRAME: 0,
+    RIVER: 1,
+    ROCKS: 0,
+    SEASHELL_FRAME: 0,
+    SNOW: 0,
+    SNOWY_MOUNTAIN: 1,
+    SPLIT_FRAME: 0,
+    STEVE_ROSS: 0,
+    STRUCTURE: 0,
+    SUN: 0,
+    TOMB_FRAME: 0,
+    TREE: 1,
+    TREES: 1,
+    TRIPLE_FRAME: 0,
+    WATERFALL: 0,
+    WAVES: 0,
+    WINDMILL: 0,
+    WINDOW_FRAME: 0,
+    WINTER: 0,
+    WOOD_FRAMED: 0,
+  };
 
-  // Write code that will add this to the collection!
+  const result = await client
+    .db("databaseWeek3")
+    .collection("bob_ross_episodes")
+    .insertOne(addedEpisode);
 
   console.log(
-    `Created season 9 episode 13 and the document got the id ${"TODO: fill in variable here"}`
+    `Created season 9 episode 13 and the document got the id ${result.insertedId}`
   );
 }
 
 async function findEpisodesExercises(client) {
-  /**
-   * Complete the following exercises.
-   * The comments indicate what to do and what the result should be!
-   */
+  const database = client.db("databaseWeek3");
+  const collection = database.collection("bob_ross_episodes");
 
   // Find the title of episode 2 in season 2 [Should be: WINTER SUN]
-
-  console.log(
-    `The title of episode 2 in season 2 is ${"TODO: fill in variable here"}`
-  );
+  const episodeToFind = await collection.findOne({ EPISODE: "S02E02" });
+  console.log(`The title of episode 2 in season 2 is ${episodeToFind.TITLE}`);
 
   // Find the season and episode number of the episode called "BLACK RIVER" [Should be: S02E06]
-
+  const episodeByTitle = await collection.findOne({ TITLE: "BLACK RIVER" });
   console.log(
-    `The season and episode number of the "BLACK RIVER" episode is ${"TODO: fill in variable here"}`
+    `The season and episode number of the "BLACK RIVER" episode is ${episodeByTitle.EPISODE}`
   );
 
   // Find all of the episode titles where Bob Ross painted a CLIFF [Should be: NIGHT LIGHT, EVENING SEASCAPE, SURF'S UP, CLIFFSIDE, BY THE SEA, DEEP WILDERNESS HOME, CRIMSON TIDE, GRACEFUL WATERFALL]
-
+  const cliffPaintEpisode = await collection.find({ CLIFF: 1 });
   console.log(
-    `The episodes that Bob Ross painted a CLIFF are ${"TODO: fill in variable here"}`
+    `The episodes that Bob Ross painted a CLIFF are ${cliffPaintEpisode.TITLE}`
   );
 
   // Find all of the episode titles where Bob Ross painted a CLIFF and a LIGHTHOUSE [Should be: NIGHT LIGHT]
