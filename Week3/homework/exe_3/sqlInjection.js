@@ -15,7 +15,8 @@ connection.connect((err) => {
 
 function getPopulation(Country, name, code, cb) {
   connection.query(
-    `SELECT Population FROM ${Country} WHERE Name = '${name}' and Code2 = '${code}'`,
+    `SELECT Population FROM ${Country} WHERE Name = ? and Code2 = ?`,
+    [name, code],
     function (err, result) {
       if (err) cb(err);
       if (result.length == 0) cb(new Error("Not found"));
@@ -36,8 +37,9 @@ function cb(err, result) {
 // SQLi query
 // getPopulation("country", "' OR 1=1 --", "", cb);
 // getPopulation("country", "'OR '1'='1'", "AW", cb);
-getPopulation("country", "OR 1=1", "OR 1=1", cb);
+// getPopulation("country", "OR 1=1", "OR 1=1", cb);
 //=============
-// getPopulation("country", "Aruba", "AW", cb);
+// Test query
+getPopulation("country", "Aruba", "AW", cb);
 
 connection.end();
