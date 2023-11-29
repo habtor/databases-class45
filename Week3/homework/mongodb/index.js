@@ -4,13 +4,7 @@ require("dotenv").config();
 const { seedDatabase } = require("./seedDatabase.js");
 
 async function createEpisodeExercise(client) {
-  /**
-   * We forgot to add the last episode of season 9. It has this information:
-   *
-   * episode: S09E13
-   * title: MOUNTAIN HIDE-AWAY
-   * elements: ["CIRRUS", "CLOUDS", "CONIFER", "DECIDUOUS", "GRASS", "MOUNTAIN", "MOUNTAINS", "RIVER", "SNOWY_MOUNTAIN", "TREE", "TREES"]
-   */
+ 
   const addedEpisode = {
     EPISODE: "S09E13",
     TITLE: "MOUNTAIN HIDE-AWAY",
