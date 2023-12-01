@@ -13,41 +13,33 @@ connection.connect((err) => {
   console.log("Database connected...");
 });
 
-//============ Delete, create and select database if exist ============
-const deleteDatabase = "DROP DATABASE IF EXISTS meetup";
-const createDatabase = "CREATE DATABASE IF NOT EXISTS meetup";
-const useDatabase = "USE meetup";
-//=========== Create tables ============
-const createInviteeTable = `CREATE TABLE IF NOT EXISTS Invitee 
+//============ Delete, create and select database and tables ============
+const queries = [
+  "DROP DATABASE IF EXISTS meetup",
+  "CREATE DATABASE IF NOT EXISTS meetup",
+  "USE meetup",
+  `CREATE TABLE IF NOT EXISTS Invitee 
     (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     invitee_no INT,
     invitee_name VARCHAR(255),
     invited_by VARCHAR(255)
-  )`;
-const createRoomTable = `CREATE TABLE IF NOT EXISTS Room 
+  )`,
+  `CREATE TABLE IF NOT EXISTS Room 
    (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     room_no INT,
     room_name VARCHAR(255),
     floor_number INT
-  )`;
-const createMeetingTable = `CREATE TABLE IF NOT EXISTS Meeting (
+  )`,
+  `CREATE TABLE IF NOT EXISTS Meeting (
     id INT AUTO_INCREMENT PRIMARY KEY NOT NULL, 
     meeting_no INT,
     meeting_title VARCHAR(255),
     starting_time TIME,
     ending_time TIME,
     room_no INT
-  )`;
-//============ Insert to tables =========
-
-const queries = [
-  deleteDatabase,
-  createDatabase,
-  useDatabase,
-  createInviteeTable,
-  createRoomTable,
-  createMeetingTable,
+  )`,
 ];
+
 queries.forEach((query) => {
   connection.query(query, (err) => {
     if (err) throw err;
@@ -55,33 +47,32 @@ queries.forEach((query) => {
   });
 });
 
-//============ Insert to invitee
-const insertDataToInvitee = (values) => {
-  const inviteeInsertQuery =
-    "insert into invitee (invitee_no,invitee_name,invited_by) values ?";
-  connection.query(inviteeInsertQuery, [values], (err) => {
+//=========== Insert function
+const insertData = (table, columns, values) => {
+  const insertQuery = `INSERT INTO ${table} (${columns.join(", ")}) values ?`;
+  connection.query(insertQuery, [values], (err) => {
     if (err) throw err;
-    console.log("Data added to invitee table...");
+    console.log(`Data added to ${table} table...`);
   });
 };
 
-//============ Insert to meeting
-const insertDataTomeeting = (values) => {
-  const meetingInsertQuery =
-    "insert into meeting (meeting_no, meeting_title, starting_time, ending_time, room_no) values ?";
-  connection.query(meetingInsertQuery, [values], (err) => {
-    if (err) throw err;
-    console.log("Data added to meeting table...");
-  });
+//============ Insert to invitee
+const insertDataToInvitee = (values) => {
+  insertData("invitee", ["invitee_no", "invitee_name", "invited_by"], values);
 };
+
+//============ Insert to meeting
+const insertDataToMeeting = (values) => {
+  insertData(
+    "meeting",
+    ["meeting_no", "meeting_title", "starting_time", "ending_time", "room_no"],
+    values
+  );
+};
+
 //============ Insert to room
 const insertDataToRoom = (values) => {
-  const roomInsertQuery =
-    "insert into room (room_no, room_name, floor_number) values ?";
-  connection.query(roomInsertQuery, [values], (err) => {
-    if (err) throw err;
-    console.log("Data added to room table...");
-  });
+  insertData("room", ["room_no", "room_name", "floor_number"], values);
 };
 
 //============ Create dummy values
@@ -92,7 +83,7 @@ for (let i = 1; i <= 5; i++) {
   ];
   const inviteeValues = [[i, `Mark the ${i}`, `John the ${i + 1}`]];
   insertDataToRoom(roomValues);
-  insertDataTomeeting(meetingValues);
+  insertDataToMeeting(meetingValues);
   insertDataToInvitee(inviteeValues);
 }
 
