@@ -27,11 +27,15 @@ GROUP BY research_Papers.paper_title`;
 
 // 2. Sum of the research papers published by all female authors.
 const secondQ = `
-SELECT COUNT(research_Papers.paper_title) AS Female_Authors
-FROM research_Papers
-JOIN author_paper ON author_paper.paper_id = research_Papers.paper_id
-JOIN authors ON authors.author_id = author_paper.author_id
-WHERE authors.gender = 'Female'`;
+SELECT SUM(paper_count) AS Total_Papers_By_Female_Authors
+FROM (
+    SELECT author_paper.author_id, COUNT(research_Papers.paper_id) AS paper_count
+    FROM authors
+    JOIN author_paper ON authors.author_id = author_paper.author_id
+    JOIN research_Papers ON author_paper.paper_id = research_Papers.paper_id
+    WHERE authors.gender = 'Female'
+    GROUP BY author_paper.author_id
+) AS Female_Papers`;
 
 // 3. Average of the h-index of all authors per university.
 const thirdQ = `SELECT authors.university, AVG(h_index)
